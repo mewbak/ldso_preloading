@@ -1,31 +1,5 @@
 #include "lp_libc.h"
 
-int lp_memcmp(const void *, const void *, size_t);
-char * lp_strdup(char *s);
-void lp_strcpy(char *, char *);
-int lp_strcmp(const char *, const char *);
-int lp_strncmp(const char *s1, const char *s2, size_t n);
-int lp_memcmp(const void *s1, const void *s2, unsigned int n);
-char * lp_strrchr(const char *cp, int ch);
-char *lp_strchr(const char *s, int c);
-void lp_memcpy(void *, void *, unsigned int);
-void lp_memset(void *, unsigned char, unsigned int);
-int lp_printf(char *fmt, ...);
-int lp_sprintf(char *, char *, ...);
-char * lp_itoa(long x, char *t);
-char * lp_itox(long x, char *t);
-int lp_puts(char *str);
-size_t lp_strlen(char *s);
-void lp_exit(long);
-void *lp_mmap(unsigned long, unsigned long, unsigned long, unsigned long,  long, unsigned long);
-long lp_open(char *, unsigned long);
-long lp_write(long, char *, unsigned long);
-int lp_read(long, char *, unsigned long);
-int lp_getpid(void);
-int lp_getppid(void);
-int lp_prctl(long, unsigned long, unsigned long, unsigned long, unsigned long);
-void lp_exit(long);
-
 int lp_printf(char *fmt, ...)
 {
 	int in_p;
@@ -41,29 +15,29 @@ int lp_printf(char *fmt, ...)
 	in_p = 0;
 	while(*fmt) {
 		if (*fmt!='%' && !in_p) {
-			_write(1, fmt, 1);
+			lp_write(1, fmt, 1);
 			in_p = 0;
 		}
 		else if (*fmt!='%') {
 			switch(*fmt) {
 				case 's':
 					dword = (unsigned long) __builtin_va_arg(alist, long);
-					_puts((char *)dword);
+					lp_puts((char *)dword);
 					break;
 				case 'u':
 					word = (unsigned int) __builtin_va_arg(alist, int);
-					_puts(itoa(word, numbuf));
+					lp_puts(lp_itoa(word, numbuf));
 					break;
 				case 'd':
 					word = (unsigned int) __builtin_va_arg(alist, int);
-					_puts(itoa(word, numbuf));
+					lp_puts(lp_itoa(word, numbuf));
 					break;
 				case 'x':
 					dword = (unsigned long) __builtin_va_arg(alist, long);
-					_puts(itox(dword, numbuf));
+					lp_puts(lp_itox(dword, numbuf));
 					break;
 				default:
-					_write(1, fmt, 1);
+					lp_write(1, fmt, 1);
 					break;
 			}
 			in_p = 0;
@@ -184,8 +158,8 @@ int lp_fsync(int fd)
 
 int lp_puts(char *str)
 {
-	_write(1, str, _strlen(str));
-	_fsync(1);
+	lp_write(1, str, lp_strlen(str));
+	lp_fsync(1);
 
 	return 1;
 }
@@ -266,13 +240,6 @@ void lp_memcpy(void *dst, void *src, unsigned int len)
 		s++, d++;
 	}
 
-}
-
-void lp_exit(long status)
-{
-	__asm__ volatile("mov %0, %%rdi\n"
-			 "mov $60, %%rax\n"
-			 "syscall" : : "r"(status));
 }
 
 long lp_open(char *path, unsigned long flags)

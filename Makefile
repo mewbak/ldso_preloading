@@ -1,7 +1,9 @@
+INTERP_PATH="\/home\/elfmaster\/git\/ldso_preloading\/interp"
+
 all:
-	gcc -g -nostdlib interp.c iter.c -o interp
+	gcc -g -nostdlib lp_interp.c lp_iter.c lp_libc.c -o lp_interp
 tests:
-	gcc -Wl,--dynamic-linker=\/home\/elfmaster\/git\/ldso_preloading\/linker\/interp test.c -o test
+	#gcc -Wl,--dynamic-linker=$(INTERP_PATH) test.c -o test
 
 clean:
 	rm -f interp

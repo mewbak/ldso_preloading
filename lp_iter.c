@@ -1,4 +1,4 @@
-#include "interp.h"
+#include "lp_interp.h"
 
 #define ERRONEOUS_AUXV_COUNT 4096
 
@@ -22,8 +22,8 @@ lp_auxv_iterator_next(struct lp_auxv_iterator *iter, struct lp_auxv_entry *entry
 	int i = 0;
 	struct lp_ctx *ctx = 0;
 
-	printf("iter: index %zu\n", iter->index);
-	printf("iter: a_type: %d\n", iter->auxv[iter->index].a_type);
+	lp_printf("iter: index %d\n", iter->index);
+	lp_printf("iter: a_type: %d\n", iter->auxv[iter->index].a_type);
 	if (iter->auxv[iter->index].a_type == AT_NULL)
 		return LP_ITER_DONE;
 
@@ -33,7 +33,5 @@ lp_auxv_iterator_next(struct lp_auxv_iterator *iter, struct lp_auxv_entry *entry
 		entry->string = (char *)entry->value;
 	if (iter->index++ >= ERRONEOUS_AUXV_COUNT)
 		return LP_ITER_ERROR;
-
 	return LP_ITER_OK;
 }
-
