@@ -11,6 +11,7 @@
 #include <search.h>
 #include <sys/time.h>
 #include <elf.h>
+#include "lp_libc.h"
 
 typedef struct lp_auxv_iterator {
 	unsigned int index;
